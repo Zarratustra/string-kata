@@ -37,6 +37,16 @@ public class StringCalculatorTest {
     }
 
     @Test
+    void arbitraryDelimiter() {
+        calculatorAssertion("//;\n1;2;3;4",10);
+    }
+
+    @Test
+    void arbitraryDelimiterNoNumbers() {
+        calculatorAssertion("//;\n",0);
+    }
+
+    @Test
     void delimitersNextToEachOther() {
         assertThrows(
                 IllegalArgumentException.class,

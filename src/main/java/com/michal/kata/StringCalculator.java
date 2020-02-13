@@ -8,6 +8,8 @@ public class StringCalculator {
 
     private static String HEADER_START = "//";
     private static String DEFAULT_SEPARATOR = ",|\\n";
+    private static int MAX_ALLOWED_VALUE = 1000;
+
 
     int add(String numbers) {
         boolean hasHeader = numbers.startsWith(HEADER_START);
@@ -29,7 +31,11 @@ public class StringCalculator {
             List<Integer> parsedNumbers = parseNumbers(numbers, separatorRegex);
             validateNoNegativeNumbers(parsedNumbers);
 
-            return sumNumbers(parsedNumbers);
+            List<Integer> numbersNotExceedingLimit = parsedNumbers
+                    .stream()
+                    .filter(num -> num <= MAX_ALLOWED_VALUE)
+                    .collect(Collectors.toList());
+            return sumNumbers(numbersNotExceedingLimit);
         }
     }
 

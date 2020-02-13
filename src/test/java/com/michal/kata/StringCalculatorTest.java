@@ -47,6 +47,11 @@ public class StringCalculatorTest {
     }
 
     @Test
+    void ignoreNumbersBiggerThan1000() {
+        calculatorAssertion("2,3,1000,1010", 1005);
+    }
+
+    @Test
     void delimitersNextToEachOther() {
         assertThrows(
                 IllegalArgumentException.class,

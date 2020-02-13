@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 public class StringCalculator {
 
     private static String HEADER_START = "//";
+    private static String QUOTE_START = "\\[";
+    private static String QUOTE_END = "]";
     private static String DEFAULT_SEPARATOR = ",|\\n";
     private static int MAX_ALLOWED_VALUE = 1000;
 
@@ -26,17 +28,20 @@ public class StringCalculator {
         }
     }
 
-    private String getSeparatorRegex(String firstLine){
-        boolean hasSimpleHeader = firstLine.length() == 3;
-        if(hasSimpleHeader){
-            String separator = firstLine.substring(HEADER_START.length(), HEADER_START.length()+1);
+    private String getSeparatorRegex(String firstLine) {
+        boolean hasOneCharHeader = firstLine.length() == 3;
+        if (hasOneCharHeader) {
+            String separator = firstLine.substring(HEADER_START.length(), HEADER_START.length() + 1);
             return Pattern.quote(separator);
-        }else{
-            Pattern pattern = Pattern.compile(HEADER_START+"\\[(.*)]");
+        } else {
+            Pattern pattern = Pattern.compile(HEADER_START + QUOTE_START+"(.*)"+QUOTE_END);
             Matcher matcher = pattern.matcher(firstLine);
             matcher.find();
-            String extractedDelimiter = matcher.group(1);
-            return Pattern.quote(extractedDelimiter);
+            String extractedDelimiters = matcher.group(1);
+            return Arrays.stream(
+                    extractedDelimiters.split(QUOTE_END+QUOTE_START)
+            ).map(Pattern::quote)
+                    .collect(Collectors.joining("|"));
         }
     }
 
@@ -47,11 +52,7 @@ public class StringCalculator {
             List<Integer> parsedNumbers = parseNumbers(numbers, separatorRegex);
             validateNoNegativeNumbers(parsedNumbers);
 
-            List<Integer> numbersNotExceedingLimit = parsedNumbers
-                    .stream()
-                    .filter(num -> num <= MAX_ALLOWED_VALUE)
-                    .collect(Collectors.toList());
-            return sumNumbers(numbersNotExceedingLimit);
+            return sumNumbers(parsedNumbers);
         }
     }
 
@@ -83,6 +84,7 @@ public class StringCalculator {
     private int sumNumbers(List<Integer> numbers) {
         return numbers
                 .stream()
+                .filter(num -> num <= MAX_ALLOWED_VALUE)
                 .mapToInt(Integer::intValue)
                 .sum();
     }

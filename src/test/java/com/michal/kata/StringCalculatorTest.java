@@ -52,6 +52,11 @@ public class StringCalculatorTest {
     }
 
     @Test
+    void arbitraryMultipleDelimiters() {
+        calculatorAssertion("//[aa][bb]\n1aa2bb3aa4", 10);
+    }
+
+    @Test
     void arbitraryDelimiterNoNumbers() {
         calculatorAssertion("//;\n", 0);
     }

@@ -9,7 +9,8 @@ public class StringCalculator {
             return 0;
         } else {
             try {
-                String[] separatedNumbers = numbers.split(",");
+                String separatorRegex = ",|\\n";
+                String[] separatedNumbers = numbers.split(separatorRegex,-1);
                 int sum = Arrays.stream(separatedNumbers)
                         .mapToInt(Integer::parseInt)
                         .sum();

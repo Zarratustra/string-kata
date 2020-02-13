@@ -31,6 +31,29 @@ public class StringCalculatorTest {
         calculatorAssertion("1,2,3,4,5",15);
     }
 
+    @Test
+    void commasAndNewlines() {
+        calculatorAssertion("1\n2,3\n4",10);
+    }
+
+    @Test
+    void delimitersNextToEachOther() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("1\n2,3,\n4,5"),
+                "Calculator didn't throw exception on input with trailing comma"
+        );
+    }
+
+    @Test
+    void trailingComma() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.add("1,2,3,4,5,"),
+                "Calculator didn't throw exception on input with trailing comma"
+        );
+    }
+
     void calculatorAssertion(String input, int expectedOutput) {
         assertEquals(expectedOutput, calculator.add(input), "Wrong output for input '"+input+"'");
     }

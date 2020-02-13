@@ -42,6 +42,16 @@ public class StringCalculatorTest {
     }
 
     @Test
+    void regexSpecialCharacterAsDelimiter() {
+        calculatorAssertion("//[\n1[2[3[4", 10);
+    }
+
+    @Test
+    void arbitraryLongDelimiter() {
+        calculatorAssertion("//[aab]\n1aab2aab3aab4", 10);
+    }
+
+    @Test
     void arbitraryDelimiterNoNumbers() {
         calculatorAssertion("//;\n", 0);
     }

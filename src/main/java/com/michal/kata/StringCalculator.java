@@ -2,6 +2,8 @@ package com.michal.kata;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringCalculator {
@@ -16,11 +18,25 @@ public class StringCalculator {
         if (hasHeader) {
             String[] headerAndRest = numbers.split("\n", 2);
             String firstLine = headerAndRest[0];
-            String separatorRegex = firstLine.split(HEADER_START, 2)[1];
             String numbersToAdd = headerAndRest[1];
+            String separatorRegex = getSeparatorRegex(firstLine);
             return addUsingRegex(numbersToAdd, separatorRegex);
         } else {
             return addUsingRegex(numbers, DEFAULT_SEPARATOR);
+        }
+    }
+
+    private String getSeparatorRegex(String firstLine){
+        boolean hasSimpleHeader = firstLine.length() == 3;
+        if(hasSimpleHeader){
+            String separator = firstLine.substring(HEADER_START.length(), HEADER_START.length()+1);
+            return Pattern.quote(separator);
+        }else{
+            Pattern pattern = Pattern.compile(HEADER_START+"\\[(.*)]");
+            Matcher matcher = pattern.matcher(firstLine);
+            matcher.find();
+            String extractedDelimiter = matcher.group(1);
+            return Pattern.quote(extractedDelimiter);
         }
     }
 

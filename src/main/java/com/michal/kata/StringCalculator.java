@@ -1,5 +1,7 @@
 package com.michal.kata;
 
+import java.util.Arrays;
+
 public class StringCalculator {
 
     int add(String numbers) {
@@ -7,14 +9,15 @@ public class StringCalculator {
             return 0;
         } else {
             try {
-                int value = Integer.parseInt(numbers);
-                return value;
+                String[] separatedNumbers = numbers.split(",");
+                int sum = Arrays.stream(separatedNumbers)
+                        .mapToInt(Integer::parseInt)
+                        .sum();
+                return sum;
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Calculator input didn't contain numbers in proper format");
             }
-
         }
-
     }
 
 }

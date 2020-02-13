@@ -18,7 +18,21 @@ public class StringCalculatorTest {
     @ParameterizedTest
     @ValueSource(ints = {-45,0,23})
     void oneNumber(int value) {
-        assertEquals(value, calculator.add(""+value), "Wrong output for input '"+value+"'");
+        calculatorAssertion(""+value,value);
+    }
+
+    @Test
+    void twoNumbers() {
+        calculatorAssertion("2,3",5);
+    }
+
+    @Test
+    void multipleNumbers() {
+        calculatorAssertion("1,2,3,4,5",15);
+    }
+
+    void calculatorAssertion(String input, int expectedOutput) {
+        assertEquals(expectedOutput, calculator.add(input), "Wrong output for input '"+input+"'");
     }
 
     @Test
